@@ -274,7 +274,7 @@ export const sendResetPasswordOtp = async (req, res) => {
             from: process.env.GMAIL_USER,
             to: user.email,
             subject: "Password Reset OTP",
-            text: `Your OTP for password reset is ${otp}.`
+            text: `Your OTP for password reset is ${otp}.Use this OTP to reset your password.`
         };
 
         let emailSent = true;
@@ -291,4 +291,47 @@ export const sendResetPasswordOtp = async (req, res) => {
         console.error("Error during sending password reset OTP:", error);
         return res.status(500).json({ success: false, message: "Internal server error" });
     }
+}
+
+// Reset User Password using the OTP
+export const resetPassword = async (req, res) => {
+    try {
+        const { email, otp, newPassword } = req.body;
+        if (!email || !otp || !newPassword) {
+            return res.status(400).json({ success: false, message: "Email,OTP & New Password are required" });
+        }
+
+        const user = await userModel.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        // Check if OTP is present
+        if (user.resetOtp === "" || !user.resetOtp) {
+            return res.status(400).json({ success: false, message: "No OTP found. Please request a new one." });
+        }
+
+        // Check if OTP is expired
+        if (Number(user.resetOtpExpireAt) < Date.now()) {
+            return res.status(400).json({ success: false, message: "OTP Expired. Please request a new one." });
+        }
+
+        // Check if OTP is valid
+        if (user.resetOtp !== otp) {
+            return res.status(400).json({ success: false, message: "Invalid OTP" });
+        }
+
+        // If OTP is valid, reset the password
+        const hashPassword = await bcrypt.hash(newPassword, 10);
+        user.password = hashPassword;
+        user.resetOtp = "";
+        user.resetOtpExpireAt = 0;
+
+        await user.save();
+
+        return res.status(200).json({ success: true, message: "Password reset successfully" });
+    } catch (error) {
+        console.error("Error resetting password:", error);
+        return res.status(500).json({ success: false, message: "Internal server error" });
+    }   
 }
