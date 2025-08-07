@@ -244,9 +244,51 @@ export const verifyEmail = async (req, res) => {
 // Check if is Authenticated
 export const isAuthenticated = async (req, res) => {
     try {
-        
+        return res.status(200).json({ success: true, message: "Successfully Authenticated"})
     } catch (error) {
         console.error("Error checking authentication:", error);
         return res.status(500).json({success: false, message: "Internal server error"});
+    }
+}
+
+// Send Password Reset OTP to the User's Email
+export const sendResetPasswordOtp = async (req, res) => {   
+    try {
+        const { email } = req.body;
+        if (!email) {
+            return res.status(400).json({ success: false, message: "Email is required" });
+        }
+
+        const user = await userModel.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        const otp = String(Math.floor(100000 + Math.random() * 900000));
+        user.resetOtp = otp;
+        user.resetOtpExpireAt = Date.now() + 15 * 60 * 1000; // 15 minutes from now
+
+        await user.save();
+
+        const mailOptions = {
+            from: process.env.GMAIL_USER,
+            to: user.email,
+            subject: "Password Reset OTP",
+            text: `Your OTP for password reset is ${otp}.`
+        };
+
+        let emailSent = true;
+        try {
+            await transporter.sendMail(mailOptions);
+            console.log("Email sent (or attempted)!");
+        } catch (emailError) {
+            emailSent = false;
+            console.error("Failed to send password reset email:", emailError);
+        }
+
+        return res.status(200).json({ success: true, message: emailSent ? "Password reset OTP sent to Email" : "Failed to send Password reset OTP" });
+    } catch (error) {
+        console.error("Error during sending password reset OTP:", error);
+        return res.status(500).json({ success: false, message: "Internal server error" });
     }
 }
