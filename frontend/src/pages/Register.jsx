@@ -252,7 +252,7 @@ const Register = () => {
             </div>
           </div>
         </div>
-        
+        {loading ? isRegistering ? 'Creating account...' : 'Signing in...' : isRegistering ? 'Create Account' : 'Sign In'}
         <div className="mt-8 text-center text-xs text-gray-500">
           © {new Date().getFullYear()} Your Company. All rights reserved.
         </div>
