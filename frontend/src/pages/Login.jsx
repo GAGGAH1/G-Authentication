@@ -1,6 +1,7 @@
 import { useState } from 'react';
-
+import { useNavigate, Link } from 'react-router-dom';
 const Login = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
@@ -115,9 +116,17 @@ const Login = () => {
 
             {/* Password */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                Password
-              </label>
+              <div className='flex justify-between items-center mb-1'>
+                    <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                      Password
+                    </label>
+                    <Link to="/reset-password" className="text-sm text-indigo-600 hover:text-indigo-500 font-medium">
+                      Forgot?
+                    </Link>
+
+              </div>
+              
+              
               <input
                 id="password"
                 type="password"
