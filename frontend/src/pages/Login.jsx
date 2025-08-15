@@ -4,7 +4,6 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [isRegistering, setIsRegistering] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -24,7 +23,6 @@ const Login = () => {
     const newErrors = {};
     if (isRegistering) {
       if (!fullName.trim()) newErrors.fullName = 'Full name is required';
-      if (password !== confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
     }
     if (!email.trim()) newErrors.email = 'Email is required';
     if (!password.trim()) newErrors.password = 'Password is required';
@@ -135,27 +133,7 @@ const Login = () => {
               )}
             </div>
 
-            {/* Confirm Password */}
-            {isRegistering && (
-              <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
-                  Confirm Password
-                </label>
-                <input
-                  id="confirmPassword"
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className={`w-full px-4 py-3 bg-gray-50 border ${
-                    errors.confirmPassword ? 'border-red-300' : 'border-gray-200'
-                  } rounded-xl focus:ring-2 focus:ring-indigo-300 outline-none`}
-                  placeholder="••••••••"
-                />
-                {errors.confirmPassword && (
-                  <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>
-                )}
-              </div>
-            )}
+            
 
             <div>
               <button

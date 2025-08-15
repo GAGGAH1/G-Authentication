@@ -6,9 +6,9 @@ import ResetPassword from './pages/ResetPassword'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import NotFound from './pages/NotFound'
-// import Register from './pages/Register'
 
-const hiddenPaths = ['/login','/register', '/email-verify', '/reset-password']
+
+const hiddenPaths = ['/login','/email-verify', '/reset-password']
 const App = () => {
   const location = useLocation()
   const hideLayout = hiddenPaths.includes(location.pathname)
@@ -20,7 +20,6 @@ const App = () => {
        <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
-          {/* <Route path="/register" element={<Register />} /> */}
           <Route path="/email-verify" element={<EmailVerify />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="*" element={<NotFound />} />
