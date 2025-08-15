@@ -5,7 +5,6 @@ const Register = () => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState(false);
@@ -40,10 +39,6 @@ const Register = () => {
       newErrors.password = 'Password must be at least 8 characters';
     }
     
-    if (password !== confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-    }
-    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -64,7 +59,7 @@ const Register = () => {
       setFullName('');
       setEmail('');
       setPassword('');
-      setConfirmPassword('');
+     
     } catch (error) {
       setLoading(false);
       setErrors({ api: error.response?.data?.message || 'Registration failed' });
@@ -183,32 +178,7 @@ const Register = () => {
                   )}
                 </div>
 
-                <div>
-                  <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
-                    Confirm Password
-                  </label>
-                  <div className="relative">
-                    <input
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      type="password"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      className={`w-full px-4 py-3 bg-gray-50 border ${
-                        errors.confirmPassword ? 'border-red-300' : 'border-gray-200'
-                      } rounded-xl focus:ring-2 focus:ring-indigo-300 focus:border-transparent transition-all duration-200 outline-none pl-12`}
-                      placeholder="••••••••"
-                    />
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <svg className="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                  </div>
-                  {errors.confirmPassword && (
-                    <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>
-                  )}
-                </div>
+               
 
                 <div className="flex items-center">
                   <input
