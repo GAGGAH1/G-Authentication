@@ -1,14 +1,14 @@
-import React from 'react'
+import { Link } from 'react-router-dom';
 import { useState } from 'react';
+// import { loginUser } from '../api/auth';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add your login logic here
-    console.log({ email, password });
+    
   };
 
   return (
@@ -86,9 +86,9 @@ const Login = () => {
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               Don't have an account?{' '}
-              <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
+              <Link to="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
                 Register
-              </a>
+              </Link>
             </p>
           </div>
         </div>
