@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
@@ -53,7 +52,7 @@ const Login = () => {
         });
         // Handle successful registration, e.g., redirect or show success message
         if(response.data.success) {
-          setUser(response.data.user);
+          setUser(response.data.data);
           getUserInfo(); // Fetch user info after registration
           // Optionally redirect or show a success message
           navigate('/')
@@ -69,7 +68,7 @@ const Login = () => {
         });
         // Handle successful login, e.g., redirect or set user data
         if(response.data.success) {
-          setUser(response.data.user);
+          setUser(response.data.data);
           getUserInfo(); // Fetch user info after login
           // Optionally redirect or show a success message  
           navigate('/')

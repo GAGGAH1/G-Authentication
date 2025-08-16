@@ -15,7 +15,7 @@ export const AppProvider = ({ children }) => {
     try {
       const response = await axios.get(`${backendUrl}/api/user/data`);
       if (response.data.success) {
-        setUser(response.data.user);
+        setUser(response.data.data);
       } else {
         setError(response.data.message || 'Failed to fetch user info');
       } 
@@ -24,12 +24,13 @@ export const AppProvider = ({ children }) => {
       setError(error.message || 'An error occurred');
     }
   }
-  // Example: login and logout handlers
+  // Function to handle user login
   const login = (userData) => {
     setUser(userData);
     setError(null);
   };
 
+  // Function to handle user logout
   const logout = () => {
     setUser(null);
     setError(null);
