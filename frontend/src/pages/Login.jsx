@@ -1,12 +1,18 @@
 import { useContext } from 'react';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+
 const Login = () => {
-  const { setIsLoggedIn, backendUrl } = useContext(useAppContext);
+  const navigate = useNavigate();
+  
+  const { user, setUser, backendUrl, getUserInfo } = useAppContext();
+  const isLoggedIn = !!user;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [fullName, setFullName] = useState('');
+  const [name, setName] = useState('');
   const [isRegistering, setIsRegistering] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -25,7 +31,7 @@ const Login = () => {
     // Basic form validation
     const newErrors = {};
     if (isRegistering) {
-      if (!fullName.trim()) newErrors.fullName = 'Full name is required';
+      if (!name.trim()) newErrors.name = 'Name is required';
     }
     if (!email.trim()) newErrors.email = 'Email is required';
     if (!password.trim()) newErrors.password = 'Password is required';
@@ -38,9 +44,49 @@ const Login = () => {
     // Handle your login or register logic here
     setLoading(true);
     try {
+      axios.defaults.withCredentials = true; // Ensure cookies are sent with requests
       if (isRegistering) {
-        // await registerUser({ fullName, email, password })
-        console.log('Registering:', { fullName, email, password });
+        const response = await axios.post(`${backendUrl}/api/auth/register`, {
+          name,
+          email,
+          password,
+        });
+        // Handle successful registration, e.g., redirect or show success message
+        if(response.data.success) {
+          setUser(response.data.user);
+          getUserInfo(); // Fetch user info after registration
+          // Optionally redirect or show a success message
+          navigate('/')
+          toast.success('Registration successful! Redirecting to login...');
+        } else {
+          toast.error(response.data.message || 'Registration failed');
+          setErrors({ server: response.data.message || 'Registration failed' });
+        } 
+      } else {
+        const response = await axios.post(`${backendUrl}/api/auth/login`, {
+          email,
+          password,
+        });
+        // Handle successful login, e.g., redirect or set user data
+        if(response.data.success) {
+          setUser(response.data.user);
+          getUserInfo(); // Fetch user info after login
+          // Optionally redirect or show a success message  
+          navigate('/')
+          toast.success('Login successful! Redirecting...');
+        } else {
+          toast.error(response.data.message || 'Login failed');
+          setErrors({ server: response.data.message || 'Login failed' });
+        }
+      }
+      // Example: Call your API for login or registration
+      // Replace with your actual API calls
+      if (isRegistering) {
+        // Example: Register user
+
+
+        // await registerUser({ name, email, password })
+        console.log('Registering:', { name, email, password });
       } else {
         // await loginUser({ email, password })
         console.log('Logging in:', { email, password });
@@ -76,21 +122,21 @@ const Login = () => {
               <>
                 {/* Full Name */}
                 <div>
-                  <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                     Full Name
                   </label>
                   <input
-                    id="fullName"
+                    id="name"
                     type="text"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     className={`w-full px-4 py-3 bg-gray-50 border ${
-                      errors.fullName ? 'border-red-300' : 'border-gray-200'
+                      errors.name ? 'border-red-300' : 'border-gray-200'
                     } rounded-xl focus:ring-2 focus:ring-indigo-300 outline-none`}
                     placeholder="John Doe"
                   />
-                  {errors.fullName && (
-                    <p className="mt-1 text-sm text-red-600">{errors.fullName}</p>
+                  {errors.name && (
+                    <p className="mt-1 text-sm text-red-600">{errors.name}</p>
                   )}
                 </div>
               </>

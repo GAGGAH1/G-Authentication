@@ -8,16 +8,17 @@ import userRoutes from "./routes/userRoutes.js";
 
 import connectDB from './config/db.js';
 
-
+const allowedOrigins = ['http://localhost:5173'];
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
 
 app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
 app.use(cors({
   credentials: true,
-  origin: "http://localhost:5000"
+  origin: allowedOrigins
 }));
 app.use(cookieParser());
 

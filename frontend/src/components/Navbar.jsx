@@ -1,6 +1,8 @@
 import {Link} from "react-router-dom";
 
+
 const Navbar = () => {
+  
   return (
     <nav className='bg-gray-800 text-white p-4 flex justify-between items-center'>
        <h1>Logo</h1>

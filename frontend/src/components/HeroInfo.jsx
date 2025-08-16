@@ -1,10 +1,13 @@
 import { Link } from 'react-router-dom'
+import { useAppContext } from '../context/AppContext'
 
 const HeroInfo = () => {
+  const { user, logout } = useAppContext();
+  console.log('User in HeroInfo:', user);
   return (
     <div className="min-h-screen flex items-center justify-center  px-4">
       <div className=" rounded-xl shadow-lg p-8 max-w-md w-full text-center space-y-6">
-        <h1 className="text-5xl font-bold text-white">Who is the Dev</h1>
+        <h1 className="text-5xl font-bold text-white">Hi {user ? user.name : 'Dev'} </h1>
         <h2 className="text-2xl font-semibold text-white">Welcome to my Auth App</h2>
         <p className="text-white leading-relaxed">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam placeat eum quidem aliquid quas facere iste repellat aliquam.
