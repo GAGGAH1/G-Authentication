@@ -27,18 +27,7 @@ const EmailVerify = () => {
     navigate('/success');
   }
   
-  // const handlePaste = (e) => {
-  //   e.preventDefault();
-  //   const pasteData = e.clipboardData.getData('text').slice(0, 6);
-  //   pasteData.split('').forEach((char, index) => {
-  //     if (inputRef.current[index]) {
-  //       inputRef.current[index].value = char;
-  //       inputRef.current[index].dispatchEvent(new Event('input', { bubbles: true }));
-  //     }
-  //   }
-  //   );
-  //   inputRef.current[pasteData.length - 1].focus();
-  // }
+
 
   const handlePaste = (e) => {
     const pasteData = e.clipboardData.getData('text');
@@ -67,7 +56,7 @@ const EmailVerify = () => {
                   />
                 ))}
           </div>
-          <button className='w-full py-3 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full'>Verify Email</button>
+          <button className='w-full py-3 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full' onClick={handleSubmit}>Verify Email</button>
       </form>
     </div>
   )
