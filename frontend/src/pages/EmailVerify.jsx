@@ -13,12 +13,12 @@ const EmailVerify = () => {
   }
 
   const handleKeyDown = (e, index) => {
-    if(e.key === 'Backspace' && index > 0 && e.target.value.length === '') {
+    if(e.key === 'Backspace' && index > 0 && e.target.value === '') {
       inputRef.current[index - 1].focus();    
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const otp = inputRef.current.map(input => input.value).join('');
     // Here you would typically send the OTP to your backend for verification
@@ -27,17 +27,27 @@ const EmailVerify = () => {
     navigate('/success');
   }
   
+  // const handlePaste = (e) => {
+  //   e.preventDefault();
+  //   const pasteData = e.clipboardData.getData('text').slice(0, 6);
+  //   pasteData.split('').forEach((char, index) => {
+  //     if (inputRef.current[index]) {
+  //       inputRef.current[index].value = char;
+  //       inputRef.current[index].dispatchEvent(new Event('input', { bubbles: true }));
+  //     }
+  //   }
+  //   );
+  //   inputRef.current[pasteData.length - 1].focus();
+  // }
+
   const handlePaste = (e) => {
-    e.preventDefault();
-    const pasteData = e.clipboardData.getData('text').slice(0, 6);
-    pasteData.split('').forEach((char, index) => {
+    const pasteData = e.clipboardData.getData('text');
+    const pasteArray = pasteData.split('');
+    pasteArray.forEach((char, index) => {
       if (inputRef.current[index]) {
         inputRef.current[index].value = char;
-        inputRef.current[index].dispatchEvent(new Event('input', { bubbles: true }));
       }
-    }
-    );
-    inputRef.current[pasteData.length - 1].focus();
+    });
   }
 
 
@@ -47,7 +57,7 @@ const EmailVerify = () => {
       <form className='bg-slate-900 p-8 rounded-lg shadow-lg w-full max-w-md text-white text-sm sm:text-base'>
           <h1 className='text-white text-2xl font-semibold text-center mb-6'>Email Verify OTP</h1>
           <p className='text-center mb-6 text-purple-400'>Enter the 6-digit code sent to your email ID</p>
-          <div className='flex justify-between mb-8'>
+          <div className='flex justify-between mb-8 'onPaste={handlePaste}>
                 {Array(6).fill(0).map((_, index) => (
                   <input  type="text" maxLength="1" key={index} required
                   className='w-12 h-12 text-center bg-slate-800 border border-purple-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400' 
