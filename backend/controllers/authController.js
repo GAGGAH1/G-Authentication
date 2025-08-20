@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import userModel from "../models/userModel.js";
 import transporter from "../config/nodemailer.js"; // Assuming you have a mailer config set up
+import { EMAIL_VERIFY_TEMPLATE, PASSWORD_RESET_TEMPLATE } from "../config/emailTemplates.js";
 
 export const registerUser = async (req, res) => {
 
@@ -148,10 +149,12 @@ export const sendVerifyOtp = async (req, res) =>{
 
         const mailOptions = {
             from: process.env.GMAIL_USER,
-            // to: process.env.GMAIL_USER,
             to: user.email,
             subject: "Account Verification OTP",
-            text: `Your OTP is ${otp}.Verify your account using this OTP.`
+            // text: `Your OTP is ${otp}.Verify your account using this OTP.`,
+            html: EMAIL_VERIFY_TEMPLATE
+                .replace(/{{email}}/g, user.email)
+                .replace(/{{otp}}/g, otp) // Using the email template
         }
 
         let emailSent = true
@@ -255,7 +258,8 @@ export const sendResetPasswordOtp = async (req, res) => {
             from: process.env.GMAIL_USER,
             to: user.email,
             subject: "Password Reset OTP",
-            text: `Your OTP for password reset is ${otp}.Use this OTP to reset your password.`
+            // text: `Your OTP for password reset is ${otp}.Use this OTP to reset your password.`,
+            html: PASSWORD_RESET_TEMPLATE.replace("{{email}}", user.email).replace("{{otp}}", otp) // Using the email template
         };
 
         let emailSent = true;
