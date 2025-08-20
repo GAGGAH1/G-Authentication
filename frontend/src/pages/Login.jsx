@@ -89,9 +89,12 @@ const Login = () => {
       } else {
         // await loginUser({ email, password })
         console.log('Logging in:', { email, password });
+        toast.success('Login successful! Redirecting...');
+        navigate('/');
       }
     } catch (error) {
       console.error(error);
+      toast.error(error.message || 'An error occurred');
       // Optionally set error messages here
     } finally {
       setLoading(false);
