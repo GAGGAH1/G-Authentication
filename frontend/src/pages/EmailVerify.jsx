@@ -1,10 +1,18 @@
 import React from 'react'
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'
 import logo from '../assets/images/house.png' // Assuming you have a logo image in assets
+import toast from 'react-hot-toast';
+import axios from 'axios';
+import { useAppContext } from '../context/AppContext'; // Assuming you have a context 
+
 
 const EmailVerify = () => {
   const navigate = useNavigate();
   const inputRef = React.useRef([]);
+  const { backendUrl, user, login, getUserInfo } = useAppContext(); // Assuming you have a context to get backend URL
+
+  axios.defaults.withCredentials = true; // Ensure cookies are sent with requests
 
   const handleInput = (e, index) => {
     if(e.target.value.length > 0 && index < inputRef.current.length - 1) {
@@ -21,10 +29,28 @@ const EmailVerify = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const otp = inputRef.current.map(input => input.value).join('');
-    // Here you would typically send the OTP to your backend for verification
-    console.log('OTP submitted:', otp);
-    // Navigate to a success page or show a success message
-    navigate('/success');
+    
+    if (otp.length !== 6 || !/^\d{6}$/.test(otp)) {
+      toast.error("Please enter the complete 6-digit OTP");
+      return;
+    }
+    console.log("OTP entered:", otp);
+    // Call your API to verify the OTP  
+    try {
+      const response = await axios.post(`${backendUrl}/api/auth/verify-account`,{otp:otp});
+      // Handle successful verification
+      if(response.data.success) {
+        toast.success('Email verified successfully!');
+        login(response.data.data); // Assuming you have a login function in context
+        getUserInfo(); // Fetch user info after verification
+        navigate('/'); // Redirect to home or dashboard
+      } else {
+        toast.error(response.data.message || 'Verification failed');
+      }
+    } catch (error) {
+      console.error('Error during email verification:', error);
+      toast.error('Error during email verification');
+    }
   }
   
 
@@ -39,11 +65,14 @@ const EmailVerify = () => {
     });
   }
 
+  useEffect(() => {
+      login && user && user.isAccountVerified && navigate('/'); // Redirect if already logged in and email verified
+  },[login, user]);
 
   return (
     <div className='flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-200 to-purple-400'>
       <img onClick={() => navigate('/')} src={logo} alt="" className='absolute left-5 sm:left-20 top-5 w-28 sm:w-32 cursor-pointer'/>
-      <form className='bg-slate-900 p-8 rounded-lg shadow-lg w-full max-w-md text-white text-sm sm:text-base'>
+      <form onSubmit={handleSubmit} className='bg-slate-900 p-8 rounded-lg shadow-lg w-full max-w-md text-white text-sm sm:text-base'>
           <h1 className='text-white text-2xl font-semibold text-center mb-6'>Email Verify OTP</h1>
           <p className='text-center mb-6 text-purple-400'>Enter the 6-digit code sent to your email ID</p>
           <div className='flex justify-between mb-8 'onPaste={handlePaste}>
@@ -56,7 +85,7 @@ const EmailVerify = () => {
                   />
                 ))}
           </div>
-          <button className='w-full py-3 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full' onClick={handleSubmit}>Verify Email</button>
+          <button className='w-full py-3 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full cursor-pointer'>Verify Email</button>
       </form>
     </div>
   )

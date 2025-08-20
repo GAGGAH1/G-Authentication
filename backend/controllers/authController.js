@@ -214,32 +214,13 @@ export const verifyEmail = async (req, res) => {
         await user.save();
 
         return res.status(200).json({ 
-            success: true, message: "Successfully Verified Email"})
+            success: true, message: "Successfully Verified Email",})
     } catch (error) {
         console.error("Error verifying Email.", error)
         return res.status(500).json({success: false, message: "Internal server error"});
     }
 }
 
-// Resend Verification OTP
-// export const resendVerifyOtp = async (req, res) => {
-//     try {
-//         const userId = req.user.id; // Get userId from token
-//         const user = await userModel.findById(userId);
-//         if (!user) {
-//             return res.status(404).json({ success: false, message: "User not found" });
-//         }
-//         // Generate a new OTP
-//         const otp = String(Math.floor(100000 + Math.random() * 900000));
-//         user.verifyOtp = otp;
-//         user.verifyOtpExpireAt = Date.now() + 24 * 60 * 60 * 1000; // 24 hours from now
-//         await user.save();
-//         return res.status(200).json({ success: true, message: "Verification OTP resent successfully" });
-//     } catch (error) {
-//         console.error("Error during resending OTP:", error);
-//         return res.status(500).json({ success: false, message: "Internal server error" });
-//     }           
-// }
 
 // Check if is Authenticated
 export const isAuthenticated = async (req, res) => {

@@ -34,7 +34,7 @@ const Navbar = () => {
       if (response.data.success) {
         setUser(null);
         toast.success('Logout successful');
-        navigate('/')
+        navigate('/');
       } else {
         toast.error(response.data.message || 'Logout failed');
       }
