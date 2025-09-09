@@ -2,6 +2,7 @@ import {Link, useNavigate} from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
 import toast from "react-hot-toast";
 import axios from "axios";
+import logo from '../assets/images/house.png'
 
 
 const Navbar = () => {
@@ -45,7 +46,7 @@ const Navbar = () => {
   };
   return (
     <nav className='w-full bg-gray-800 text-white p-4 sm:p-6 sm:px-24 flex justify-between items-center absolute z-50'>
-       <h1>Logo</h1>
+       <img src={logo} alt="" className="w-8 h-8 object-contain left-5 sm:left-20 top-5 sm:w-32 sm:h-10 cursor-pointer"/>
        {user ? 
        <div className="w-8 h-8 flex items-center justify-center bg-amber-500 rounded-full text-black font-bold relative group">
           {user.name[0].toUpperCase()}
@@ -61,8 +62,7 @@ const Navbar = () => {
       : 
         <Link to="/login"><button className='cursor-pointer px-6 py-2 border border-amber-500 rounded-full hover:bg-amber-900 transition-colors'>Login</button></Link>
        
-      }
-        
+      }    
     </nav>
   )
 }
