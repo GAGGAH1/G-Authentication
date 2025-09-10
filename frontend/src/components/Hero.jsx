@@ -1,6 +1,6 @@
 import React from 'react'
 import HeroInfo from './HeroInfo'
-import AuthImage from '../assets/images/Auth.webp'
+import AuthImage from '../assets/images/gray.jpg'
 const Hero = () => {
   return (
     <div
